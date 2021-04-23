@@ -12,6 +12,7 @@ function tokens(n) {
 contract("Swap", (accounts) => {
   let token;
   let swap;
+  let result;
 
   beforeEach(async () => {
     token = await Token.new();
@@ -36,6 +37,23 @@ contract("Swap", (accounts) => {
     it("contract has tokens", async () => {
       let balance = await token.balanceOf(swap.address);
       assert.equal(balance.toString(), tokens("1000000"));
+    });
+  });
+
+  describe("buyTokens()", async () => {
+    it("Allows user to purchase the tokens from Swap at a fixed price", async () => {
+      result = await swap.buyTokens({
+        from: accounts[1],
+        value: web3.utils.toWei("0.1", "ether"),
+      }); //Bought 10 tokens by account - 1 for 0.1 ether
+
+      let investorBalance = await token.balanceOf(accounts[1]); //10 Tokens
+      assert.equal(investorBalance.toString(), tokens("10"));
+
+      let swapBalance = await token.balanceOf(swap.address);
+      assert.equal(swapBalance.toString(), tokens("999990"));
+      swapBalance = await web3.eth.getBalance(swap.address);
+      assert.equal(swapBalance.toString(), web3.utils.toWei("0.1", "ether"));
     });
   });
 });
