@@ -4,7 +4,7 @@ pragma solidity >=0.4.22 <0.9.0;
 contract Token {
     string public name = "Triology";
     string public symbol = "TL";
-    uint256 public totalSupply = 1000000000000000000000000;
+    uint256 public totalSupply = 1000000000000000000000000; // 1 million tokens
     uint8 public decimals = 18;
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);

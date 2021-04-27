@@ -54,6 +54,48 @@ contract("Swap", (accounts) => {
       assert.equal(swapBalance.toString(), tokens("999990"));
       swapBalance = await web3.eth.getBalance(swap.address);
       assert.equal(swapBalance.toString(), web3.utils.toWei("0.1", "ether"));
+
+      const event = result.logs[0].args;
+      assert.equal(event.account, accounts[1]);
+      assert.equal(event.token, token.address);
+      assert.equal(event.amount.toString(), tokens("10").toString());
+      assert.equal(event.rate.toString(), "100");
+
+      // console.log(result.logs);
+    });
+  });
+
+  describe("sellTokens()", async () => {
+    let result;
+
+    before(async () => {
+      // Investor must approve tokens before the purchase
+      await token.approve(swap.address, tokens("10"), { from: accounts[1] });
+      // Investor sells tokens
+      result = await swap.sellTokens(tokens("10"), { from: accounts[1] });
+    });
+
+    it("Allows user to instantly sell tokens to ethSwap for a fixed price", async () => {
+      // Check investor token balance after purchase
+      let investorBalance = await token.balanceOf(accounts[1]);
+      assert.equal(investorBalance.toString(), tokens("0"));
+
+      // Check ethSwap balance after purchase
+      let ethSwapBalance;
+      ethSwapBalance = await token.balanceOf(swap.address);
+      assert.equal(ethSwapBalance.toString(), tokens("1000000"));
+      ethSwapBalance = await web3.eth.getBalance(swap.address);
+      assert.equal(ethSwapBalance.toString(), web3.utils.toWei("0", "Ether"));
+
+      // Check logs to ensure event was emitted with correct data
+      const event = result.logs[0].args;
+      assert.equal(event.account, accounts[1]);
+      // assert.equal(event.token, token.address);
+      assert.equal(event.amount.toString(), tokens("10").toString());
+      assert.equal(event.rate.toString(), "100");
+
+      await swap.sellTokens(tokens("500"), { from: accounts[1] }).should.be
+        .rejected;
     });
   });
 });
