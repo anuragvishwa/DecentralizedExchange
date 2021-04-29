@@ -81,7 +81,12 @@ class App extends Component {
     if (this.state.loading) {
       content = <CircularIndeterminate />;
     } else {
-      content = <Main />;
+      content = (
+        <Main
+          etherBalance={this.state.swapBalance}
+          tokenBalance={this.state.tokenBalance}
+        />
+      );
     }
     return (
       <>
