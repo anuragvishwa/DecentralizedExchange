@@ -27,66 +27,75 @@ const useStyles = makeStyles({
 
 export default function LayoutTextFields(props) {
   const classes = useStyles();
-  const [output, setOutput] = useState(0);
-  const [value, setValue] = useInput({ type: "text" });
+  const [value, setValue] = useState("0");
+
+  const setEtherAmount = (e) => {
+    setValue(e.target.value * 100);
+  };
+
+  const purchaseToken = (event) => {
+    event.preventDefault();
+    let etherAmount;
+    etherAmount = value / 100;
+    etherAmount = window.web3.utils.toWei(etherAmount.toString(), "Ether");
+    props.buyTokens(etherAmount);
+  };
 
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
-        <TextField
-          id="standard-full-width"
-          label="Input"
-          onChange={(event) => {
-            console.log("changing....");
-            // const etherAmount = this.input.value;
-            // setOutput(etherAmount * 100);
-            {
-              value;
+        <form onSubmit={purchaseToken}>
+          <TextField
+            id="standard-full-width"
+            label="Input"
+            onChange={setEtherAmount}
+            style={{ margin: 8 }}
+            placeholder="0"
+            helperText={
+              "Balance: " +
+              window.web3.utils.fromWei(props.etherBalance, "Ether")
             }
-          }}
-          style={{ margin: 8 }}
-          placeholder="0"
-          helperText={
-            "Balance: " + window.web3.utils.fromWei(props.etherBalance, "Ether")
-          }
-          fullWidth
-          margin="normal"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">ETH</InputAdornment>
-            ),
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          id="standard-full-width"
-          label="Output"
-          style={{ margin: 8 }}
-          placeholder="0"
-          helperText={
-            "Balance: " + window.web3.utils.fromWei(props.tokenBalance, "Ether")
-          }
-          fullWidth
-          margin="normal"
-          value={output}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">DAI</InputAdornment>
-            ),
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+            fullWidth
+            margin="normal"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">ETH</InputAdornment>
+              ),
+            }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            id="standard-full-width"
+            label="Output"
+            style={{ margin: 8 }}
+            placeholder="0"
+            helperText={
+              "Balance: " +
+              window.web3.utils.fromWei(props.tokenBalance, "Ether")
+            }
+            fullWidth
+            disabled={true}
+            margin="normal"
+            value={value}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">DAI</InputAdornment>
+              ),
+            }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
 
-        <CardActions>
-          <Button variant="contained" color="primary">
-            SWAP
-          </Button>
-          <p>Exchange rate : 1 ETH = 100 DAI</p>
-        </CardActions>
+          <CardActions>
+            <Button type="submit" variant="contained" color="primary">
+              SWAP
+            </Button>
+            <p>Exchange rate : 1 ETH = 100 DAI</p>
+          </CardActions>
+        </form>
       </CardContent>
     </Card>
   );

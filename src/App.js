@@ -65,6 +65,12 @@ class App extends Component {
     this.setState({ loading: false });
   }
 
+  buyTokens = async (etherAmount) => {
+    const val = await this.state.swap.methods
+      .buyTokens()
+      .send({ value: etherAmount, from: this.state.account });
+  };
+
   async loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
@@ -85,6 +91,7 @@ class App extends Component {
         <Main
           etherBalance={this.state.swapBalance}
           tokenBalance={this.state.tokenBalance}
+          buyTokens={this.buyTokens}
         />
       );
     }
