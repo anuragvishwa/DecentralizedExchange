@@ -40,7 +40,7 @@ class App extends Component {
 
     try {
       const tokenData = Token.networks[networkId];
-      const token = new web3.eth.Contract(Token.abi, tokenData.address);
+      const token = await new web3.eth.Contract(Token.abi, tokenData.address);
       this.setState({ token });
       //Getting the balance of the person
       let tokenBalance = await token.methods
@@ -56,9 +56,9 @@ class App extends Component {
 
     try {
       const swapData = Swap.networks[networkId];
-      const swap = new web3.eth.Contract(Swap.abi, swapData.address);
+      const swap = await new web3.eth.Contract(Swap.abi, swapData.address);
+      console.log("Swap", swap.address);
       this.setState({ swap });
-      console.log("Swap", this.state.swap);
     } catch (err) {
       window.alert("Swap contract not deployed to detected network " + err);
     }
@@ -66,9 +66,20 @@ class App extends Component {
   }
 
   buyTokens = async (etherAmount) => {
-    const val = await this.state.swap.methods
+    await this.state.swap.methods
       .buyTokens()
       .send({ value: etherAmount, from: this.state.account });
+  };
+
+  sellTokens = (tokenAmount) => {
+    this.state.token.methods
+      .approve(this.state.swap.address, tokenAmount)
+      .send({ from: this.state.account })
+      .on("transactionHash", (hash) => {
+        this.state.swap.methods
+          .sellTokens(tokenAmount)
+          .send({ from: this.state.account });
+      });
   };
 
   async loadWeb3() {
@@ -92,6 +103,7 @@ class App extends Component {
           etherBalance={this.state.swapBalance}
           tokenBalance={this.state.tokenBalance}
           buyTokens={this.buyTokens}
+          sellTokens={this.sellTokens}
         />
       );
     }
