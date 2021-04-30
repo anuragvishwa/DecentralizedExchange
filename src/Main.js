@@ -25,18 +25,6 @@ const useStyles = makeStyles({
   },
 });
 
-function useInput({ type /*...*/ }) {
-  const [value, setValue] = useState("");
-  const input = (
-    <input
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      type={type}
-    />
-  );
-  return [value, input];
-}
-
 export default function LayoutTextFields(props) {
   const classes = useStyles();
   const [output, setOutput] = useState(0);
