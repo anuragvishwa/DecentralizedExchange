@@ -71,6 +71,8 @@ contract("Swap", (accounts) => {
     before(async () => {
       // Investor must approve tokens before the purchase
       await token.approve(swap.address, tokens("10"), { from: accounts[1] });
+      console.log(swap.address);
+
       // Investor sells tokens
       result = await swap.sellTokens(tokens("10"), { from: accounts[1] });
     });

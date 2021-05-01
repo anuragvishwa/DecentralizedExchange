@@ -15,15 +15,14 @@ class App extends Component {
       swapBalance: "",
       tokenBalance: 0,
       swap: {},
-      swapBalance: "",
       loading: true,
+      swapAdd: "",
     };
   }
 
   async componentDidMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
-    // console.log(window.web3);
   }
 
   async loadBlockchainData() {
@@ -57,8 +56,9 @@ class App extends Component {
     try {
       const swapData = Swap.networks[networkId];
       const swap = await new web3.eth.Contract(Swap.abi, swapData.address);
-      console.log("Swap", swap.address);
+      console.log("SwapAddress", swapData.address);
       this.setState({ swap });
+      this.setState({ swapAdd: swapData.address });
     } catch (err) {
       window.alert("Swap contract not deployed to detected network " + err);
     }
@@ -73,7 +73,7 @@ class App extends Component {
 
   sellTokens = (tokenAmount) => {
     this.state.token.methods
-      .approve(this.state.swap.address, tokenAmount)
+      .approve(this.state.swapAdd, tokenAmount)
       .send({ from: this.state.account })
       .on("transactionHash", (hash) => {
         this.state.swap.methods
