@@ -66,12 +66,16 @@ class App extends Component {
   }
 
   buyTokens = async (etherAmount) => {
+    this.setState({ loading: true });
     await this.state.swap.methods
       .buyTokens()
       .send({ value: etherAmount, from: this.state.account });
+
+    this.setState({ loading: false });
   };
 
   sellTokens = async (tokenAmount) => {
+    this.setState({ loading: true });
     await this.state.token.methods
       .approve(this.state.swapAdd, tokenAmount)
       .send({ from: this.state.account });
@@ -79,6 +83,7 @@ class App extends Component {
     await this.state.swap.methods
       .sellTokens(tokenAmount)
       .send({ from: this.state.account });
+    this.setState({ loading: false });
   };
 
   async loadWeb3() {
