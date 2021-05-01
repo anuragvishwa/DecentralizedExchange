@@ -30,14 +30,14 @@ export default function Sell(props) {
   const [value, setValue] = useState("0");
 
   const tokenAmount = (e) => {
-    setValue(e.target.value / 100);
+    setValue(e.target.value);
   };
 
   const sellToken = (event) => {
     event.preventDefault();
     let etherAmount;
-    // etherAmount = value;
-    etherAmount = window.web3.utils.toWei(value.toString(), "Ether");
+    etherAmount = value;
+    etherAmount = window.web3.utils.toWei(etherAmount.toString(), "Ether");
     props.sellTokens(etherAmount);
   };
 
@@ -78,7 +78,7 @@ export default function Sell(props) {
             fullWidth
             disabled={true}
             margin="normal"
-            value={value}
+            value={value / 100}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">ETH</InputAdornment>
