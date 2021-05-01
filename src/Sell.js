@@ -36,8 +36,8 @@ export default function Sell(props) {
   const sellToken = (event) => {
     event.preventDefault();
     let etherAmount;
-    etherAmount = value / 100;
-    etherAmount = window.web3.utils.toWei(etherAmount.toString(), "Ether");
+    // etherAmount = value;
+    etherAmount = window.web3.utils.toWei(value.toString(), "Ether");
     props.sellTokens(etherAmount);
   };
 

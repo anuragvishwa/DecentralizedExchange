@@ -71,15 +71,14 @@ class App extends Component {
       .send({ value: etherAmount, from: this.state.account });
   };
 
-  sellTokens = (tokenAmount) => {
-    this.state.token.methods
+  sellTokens = async (tokenAmount) => {
+    await this.state.token.methods
       .approve(this.state.swapAdd, tokenAmount)
-      .send({ from: this.state.account })
-      .on("transactionHash", (hash) => {
-        this.state.swap.methods
-          .sellTokens(tokenAmount)
-          .send({ from: this.state.account });
-      });
+      .send({ from: this.state.account });
+    console.log(tokenAmount);
+    await this.state.swap.methods
+      .sellTokens(tokenAmount)
+      .send({ from: this.state.account });
   };
 
   async loadWeb3() {
