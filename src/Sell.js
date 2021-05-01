@@ -47,7 +47,6 @@ export default function Sell(props) {
         <form onSubmit={sellToken}>
           <TextField
             id="standard-full-width"
-            label="Input"
             onChange={tokenAmount}
             style={{ margin: 8 }}
             placeholder="0"
@@ -68,7 +67,6 @@ export default function Sell(props) {
           />
           <TextField
             id="standard-full-width"
-            label="Output"
             style={{ margin: 8 }}
             placeholder="0"
             helperText={
@@ -79,6 +77,7 @@ export default function Sell(props) {
             disabled={true}
             margin="normal"
             value={value / 100}
+            variant="filled"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">ETH</InputAdornment>

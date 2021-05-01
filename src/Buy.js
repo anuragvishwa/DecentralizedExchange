@@ -28,17 +28,21 @@ const useStyles = makeStyles({
 export default function Buy(props) {
   const classes = useStyles();
   const [value, setValue] = useState("0");
+  const [etherBalance, setEtherBalance] = useState(
+    window.web3.utils.fromWei(props.etherBalance, "Ether")
+  );
 
   const setEtherAmount = (e) => {
     setValue(e.target.value * 100);
   };
 
-  const purchaseToken = (event) => {
+  const purchaseToken = async (event) => {
     event.preventDefault();
     let etherAmount;
     etherAmount = value / 100;
     etherAmount = window.web3.utils.toWei(etherAmount.toString(), "Ether");
-    props.buyTokens(etherAmount);
+    await props.buyTokens(etherAmount);
+    setEtherBalance(window.web3.utils.fromWei(props.etherBalance, "Ether"));
   };
 
   return (
@@ -47,14 +51,10 @@ export default function Buy(props) {
         <form onSubmit={purchaseToken}>
           <TextField
             id="standard-full-width"
-            label="Input"
             onChange={setEtherAmount}
             style={{ margin: 8 }}
             placeholder="0"
-            helperText={
-              "Balance: " +
-              window.web3.utils.fromWei(props.etherBalance, "Ether")
-            }
+            helperText={"Balance: " + etherBalance}
             fullWidth
             margin="normal"
             InputProps={{
@@ -66,9 +66,9 @@ export default function Buy(props) {
               shrink: true,
             }}
           />
+
           <TextField
             id="standard-full-width"
-            label="Output"
             style={{ margin: 8 }}
             placeholder="0"
             helperText={
@@ -79,6 +79,7 @@ export default function Buy(props) {
             disabled={true}
             margin="normal"
             value={value}
+            variant="filled"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">UNI</InputAdornment>
